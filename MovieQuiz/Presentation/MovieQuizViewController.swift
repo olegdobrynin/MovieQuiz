@@ -1,72 +1,119 @@
 import UIKit
 
+// MARK: - MovieQuizViewController
+
 final class MovieQuizViewController: UIViewController {
+
+    // MARK: - Outlets
+    
+    @IBOutlet private weak var questionTitleLabel: UILabel!
+    @IBOutlet private weak var posterImageView: UIImageView!
+    @IBOutlet private weak var questionTextLabel: UILabel!
+    @IBOutlet private weak var questionCounterLabel: UILabel!
+    @IBOutlet private weak var yesAnswerButton: UIButton!
+    @IBOutlet private weak var noAnswerButton: UIButton!
+
+    // MARK: - Private Properties
+    
+    private var currentQuestionIndex = 0
+    private var correctAnswers = 0
+    private let questions: [QuizQuestion] = QuizQuestion.mocks()
+
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        yesAnswerButton.layer.cornerRadius = 15
+        noAnswerButton.layer.cornerRadius = 15
+        yesAnswerButton.layer.masksToBounds = true
+        noAnswerButton.layer.masksToBounds = true
+        posterImageView.layer.cornerRadius = 20
+        posterImageView.layer.masksToBounds = true
+
+        questionTitleLabel.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
+        questionCounterLabel.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
+        yesAnswerButton.titleLabel?.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
+        noAnswerButton.titleLabel?.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
+        questionTextLabel.font = UIFont(name: "YS Display Bold", size: 23) ?? .systemFont(ofSize: 23, weight: .bold)
+
+        let current = questions[currentQuestionIndex]
+        show(quiz: makeStepViewData(from: current))
+    }
+
+    // MARK: - Actions
+    
+    @IBAction private func yesAnswerTapped(_ sender: UIButton) {
+        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer)
+    }
+
+    @IBAction private func noAnswerTapped(_ sender: UIButton) {
+        showAnswerResult(isCorrect: !questions[currentQuestionIndex].correctAnswer)
+    }
+
+    // MARK: - Private UI
+    
+    private func show(quiz step: QuizStepViewData) {
+        posterImageView.image = step.image
+        questionTextLabel.text = step.question
+        questionCounterLabel.text = step.questionNumber
+        posterImageView.layer.borderWidth = 0
+    }
+
+    private func show(quiz result: QuizResultViewData) {
+        let alert = UIAlertController(
+            title: result.title,
+            message: result.text,
+            preferredStyle: .alert
+        )
+
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            let first = self.questions[self.currentQuestionIndex]
+            self.show(quiz: self.makeStepViewData(from: first))
+        }
+
+        alert.addAction(action)
+        present(alert, animated: true)
+    }
+
+    private func showAnswerResult(isCorrect: Bool) {
+        if isCorrect { correctAnswers += 1 }
+
+        posterImageView.layer.masksToBounds = true
+        posterImageView.layer.borderWidth = 8
+        posterImageView.layer.borderColor = (isCorrect ? UIColor.ypGreen : UIColor.ypRed).cgColor
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.showNextQuestionOrResults()
+        }
+    }
+
+    // MARK: - Private Helpers
+    
+    private func showNextQuestionOrResults() {
+        if currentQuestionIndex == questions.count - 1 {
+            let text = "Ваш результат: \(correctAnswers)/\(questions.count)"
+            let viewModel = QuizResultViewData(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть ещё раз"
+            )
+            show(quiz: viewModel)
+        } else {
+            currentQuestionIndex += 1
+            let next = questions[currentQuestionIndex]
+            show(quiz: makeStepViewData(from: next))
+        }
+    }
+
+    private func makeStepViewData(from model: QuizQuestion) -> QuizStepViewData {
+        QuizStepViewData(
+            image: UIImage(named: model.imageName) ?? UIImage(),
+            question: model.text,
+            questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)"
+        )
     }
 }
-
-/*
- Mock-данные
- 
- 
- Картинка: The Godfather
- Настоящий рейтинг: 9,2
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Dark Knight
- Настоящий рейтинг: 9
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Kill Bill
- Настоящий рейтинг: 8,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Avengers
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Deadpool
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: The Green Knight
- Настоящий рейтинг: 6,6
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
- 
- 
- Картинка: Old
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: The Ice Age Adventures of Buck Wild
- Настоящий рейтинг: 4,3
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: Tesla
- Настоящий рейтинг: 5,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- 
- 
- Картинка: Vivarium
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-*/
