@@ -17,8 +17,10 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
-    private let questions: [QuizQuestion] = QuizQuestion.mocks()
-
+    private let questionsAmount: Int = 10
+    private var questionFactory: QuestionFactory = QuestionFactory()
+    private var currentQuestion: QuizQuestion?
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -37,18 +39,31 @@ final class MovieQuizViewController: UIViewController {
         noAnswerButton.titleLabel?.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
         questionTextLabel.font = UIFont(name: "YS Display Bold", size: 23) ?? .systemFont(ofSize: 23, weight: .bold)
 
-        let current = questions[currentQuestionIndex]
-        show(quiz: makeStepViewData(from: current))
+        if let firstQuestion = questionFactory.requestNextQuestion() {
+            currentQuestion = firstQuestion
+            let viewModel = makeStepViewData(from: firstQuestion)
+            show(quiz: viewModel)
+        }
     }
 
     // MARK: - Actions
     
     @IBAction private func yesAnswerTapped(_ sender: UIButton) {
-        showAnswerResult(isCorrect: questions[currentQuestionIndex].correctAnswer)
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        showAnswerResult(isCorrect: currentQuestion.correctAnswer)
     }
 
     @IBAction private func noAnswerTapped(_ sender: UIButton) {
-        showAnswerResult(isCorrect: !questions[currentQuestionIndex].correctAnswer)
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        showAnswerResult(isCorrect: !currentQuestion.correctAnswer)
     }
 
     // MARK: - Private UI
@@ -71,8 +86,9 @@ final class MovieQuizViewController: UIViewController {
             guard let self else { return }
             self.currentQuestionIndex = 0
             self.correctAnswers = 0
-            let first = self.questions[self.currentQuestionIndex]
-            self.show(quiz: self.makeStepViewData(from: first))
+            if let first = currentQuestion {
+                self.show(quiz: self.makeStepViewData(from: first))
+            }
         }
 
         alert.addAction(action)
@@ -87,15 +103,18 @@ final class MovieQuizViewController: UIViewController {
         posterImageView.layer.borderColor = (isCorrect ? UIColor.ypGreen : UIColor.ypRed).cgColor
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.showNextQuestionOrResults()
+            guard let self else { return }
+            self.showNextQuestionOrResults()
         }
     }
 
     // MARK: - Private Helpers
     
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questions.count - 1 {
-            let text = "Ваш результат: \(correctAnswers)/\(questions.count)"
+        self.currentQuestion = questionFactory.requestNextQuestion()
+        
+        if currentQuestionIndex == questionsAmount - 1 {
+            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
             let viewModel = QuizResultViewData(
                 title: "Этот раунд окончен!",
                 text: text,
@@ -104,7 +123,7 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
-            let next = questions[currentQuestionIndex]
+            guard let next = currentQuestion else { return }
             show(quiz: makeStepViewData(from: next))
         }
     }
@@ -113,7 +132,7 @@ final class MovieQuizViewController: UIViewController {
         QuizStepViewData(
             image: UIImage(named: model.imageName) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)"
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
     }
 }
