@@ -9,13 +9,14 @@ import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
     private let questions: [QuizQuestion] = QuizQuestion.mocks()
+    weak var delegate: QuestionFactoryDelegate?
     
-    func requestNextQuestion() -> QuizQuestion? { // 1
+    func requestNextQuestion() { // 1
         // 2
         guard let index = (0..<questions.count).randomElement() else {
-            return nil
+            delegate?.didReceiveNextQuestion(question: nil)
+            return
         }
-
-        return questions[safe: index] // 3
+        delegate?.didReceiveNextQuestion(question: questions[safe: index])
     }
 }
