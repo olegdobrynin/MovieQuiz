@@ -113,9 +113,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         posterImageView.layer.masksToBounds = true
         posterImageView.layer.borderWidth = 8
         posterImageView.layer.borderColor = (isCorrect ? UIColor.ypGreen : UIColor.ypRed).cgColor
-
+        noAnswerButton.isEnabled = false
+        yesAnswerButton.isEnabled = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
+            noAnswerButton.isEnabled = true
+            yesAnswerButton.isEnabled = true
             self.showNextQuestionOrResults()
         }
     }
