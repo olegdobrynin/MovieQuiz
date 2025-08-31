@@ -20,7 +20,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-    private var alertPresenter = AlertPresenter()
     private lazy var statisticService: StatisticServiceProtocol = StatisticService()
     
     // MARK: - Lifecycle
@@ -107,7 +106,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.restartGame()
         }
         
-        alertPresenter.show(in: self, model: model)
+        AlertPresenter.show(in: self, model: model)
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -138,7 +137,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             let bestGame = statisticService.bestGame
             let result: QuizResultViewData = QuizResultViewData(
                 title: "Этот раунд окончен!",
-                text: "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(statisticService.gamesCount)\nРекорд: \(statisticService.bestGame.correct)/\(questionsAmount) (\(bestGame.date.dateTimeString)) \n Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%",
+                text: """
+                Ваш результат: \(correctAnswers)/\(questionsAmount)
+                Количество сыгранных квизов: \(statisticService.gamesCount)
+                Рекорд: \(statisticService.bestGame.correct)/\(questionsAmount) (\(bestGame.date.dateTimeString))
+                Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+                """,
                 buttonText: "Сыграть ещё раз")
 
             show(quiz: result)
