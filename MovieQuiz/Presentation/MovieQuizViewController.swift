@@ -21,6 +21,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter = AlertPresenter()
+    private lazy var statisticService: StatisticServiceProtocol = StatisticService()
     
     // MARK: - Lifecycle
     
@@ -45,7 +46,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         self.questionFactory = questionFactory
         
         self.questionFactory?.requestNextQuestion()
-        
+                
     }
 
     // MARK: - QuestionFactoryDelegate
@@ -93,7 +94,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionCounterLabel.text = step.questionNumber
         posterImageView.layer.borderWidth = 0
     }
-    func show(quiz result: QuizResultViewData) {
+    private func show(quiz result: QuizResultViewData) {
         let model = AlertModel(title: result.title,
                                text: result.text,
                                buttonText: result.buttonText
@@ -125,12 +126,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory?.requestNextQuestion()
         
         if currentQuestionIndex == questionsAmount - 1 {
-            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
-            let result = QuizResultViewData(
+            
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
+            
+            let bestGame = statisticService.bestGame
+            let result: QuizResultViewData = QuizResultViewData(
                 title: "Этот раунд окончен!",
-                text: text,
-                buttonText: "Сыграть ещё раз"
-            )
+                text: "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(statisticService.gamesCount)\nРекорд: \(statisticService.bestGame.correct)/\(questionsAmount) (\(bestGame.date.dateTimeString)) \n Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%",
+                buttonText: "Сыграть ещё раз")
+
             show(quiz: result)
         } else {
             currentQuestionIndex += 1
