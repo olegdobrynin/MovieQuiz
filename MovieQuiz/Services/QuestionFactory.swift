@@ -8,15 +8,20 @@
 import Foundation
 
 class QuestionFactory: QuestionFactoryProtocol {
-    private let questions: [QuizQuestion] = QuizQuestion.mocks()
+    
+    private var questions: [QuizQuestion]?
     weak var delegate: QuestionFactoryDelegate?
     
-    func requestNextQuestion() { // 1
-        // 2
-        guard let index = (0..<questions.count).randomElement() else {
+    func initGame() {
+        questions = QuizQuestion.mocks()
+    }
+    
+    func requestNextQuestion() {
+        guard let index = questions?.indices.randomElement() else {
             delegate?.didReceiveNextQuestion(question: nil)
             return
         }
-        delegate?.didReceiveNextQuestion(question: questions[safe: index])
+        delegate?.didReceiveNextQuestion(question: questions!.remove(at: index))
     }
+    
 }

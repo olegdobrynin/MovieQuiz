@@ -45,6 +45,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionFactory.delegate = self
         self.questionFactory = questionFactory
         
+        self.questionFactory?.initGame()
         self.questionFactory?.requestNextQuestion()
                 
     }
@@ -83,9 +84,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
 
     // MARK: - Private UI
     private func restartGame() {
-           currentQuestionIndex = 0
-           correctAnswers = 0
-           self.questionFactory?.requestNextQuestion()
+            currentQuestionIndex = 0
+            correctAnswers = 0
+            self.questionFactory?.initGame()
+            self.questionFactory?.requestNextQuestion()
        }
     
     private func show(quiz step: QuizStepViewData) {
@@ -93,6 +95,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionTextLabel.text = step.question
         questionCounterLabel.text = step.questionNumber
         posterImageView.layer.borderWidth = 0
+        currentQuestionIndex += 1
     }
     private func show(quiz result: QuizResultViewData) {
         let model = AlertModel(title: result.title,
@@ -128,7 +131,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNextQuestionOrResults() {
         questionFactory?.requestNextQuestion()
         
-        if currentQuestionIndex == questionsAmount - 1 {
+        if currentQuestionIndex == questionsAmount {
             
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             
@@ -139,8 +142,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 buttonText: "Сыграть ещё раз")
 
             show(quiz: result)
-        } else {
-            currentQuestionIndex += 1
         }
     }
 
