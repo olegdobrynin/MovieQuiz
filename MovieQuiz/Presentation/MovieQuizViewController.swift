@@ -34,6 +34,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         noAnswerButton.layer.masksToBounds = true
         posterImageView.layer.cornerRadius = 20
         posterImageView.layer.masksToBounds = true
+        activityIndicator.hidesWhenStopped = true
         
         
         questionTitleLabel.font = UIFont(name: "YS Display Medium", size: 20) ?? .systemFont(ofSize: 20, weight: .medium)
@@ -61,14 +62,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
+        hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
 
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
     }
-    
     // MARK: - Actions
     
     @IBAction private func yesAnswerTapped(_ sender: UIButton) {
@@ -93,7 +93,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func restartGame() {
             currentQuestionIndex = 0
             correctAnswers = 0
-//            self.questionFactory?.initGame()
             self.questionFactory?.requestNextQuestion()
        }
     
@@ -103,6 +102,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionCounterLabel.text = step.questionNumber
         posterImageView.layer.borderWidth = 0
         currentQuestionIndex += 1
+        hideLoadingIndicator()
     }
     private func show(quiz result: QuizResultViewData) {
         let model = AlertModel(title: result.title,
@@ -112,6 +112,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             guard let self = self else { return }
 
             self.restartGame()
+            showLoadingIndicator()
         }
         
         AlertPresenter.show(in: self, model: model)
@@ -134,11 +135,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false 
         activityIndicator.startAnimating()
     }
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
     
@@ -165,6 +164,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             show(quiz: result)
         }else{
             questionFactory?.requestNextQuestion()
+            showLoadingIndicator()
         }
     }
     

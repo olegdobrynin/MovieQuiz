@@ -59,13 +59,4 @@ class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
-    
-//    func requestNextQuestion() {
-//        guard let index = questions?.indices.randomElement() else {
-//            delegate?.didReceiveNextQuestion(question: nil)
-//            return
-//        }
-//        delegate?.didReceiveNextQuestion(question: questions!.remove(at: index))
-//    }
-//    
 }
