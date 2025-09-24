@@ -4,6 +4,9 @@ import UIKit
 final class MovieQuizPresenter {
     private var currentQuestionIndex = 0
     let questionsAmount: Int = 10
+    var currentQuestion: QuizQuestion?
+    
+    weak var viewController: MovieQuizViewController?
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount
@@ -24,4 +27,24 @@ final class MovieQuizPresenter {
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
     }
+    
+    // MARK: - Actions
+    
+    func yesAnswerTapped() {
+     
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        viewController?.showAnswerResult(isCorrect: currentQuestion.correctAnswer)
+    }
+
+    func noAnswerTapped() {
+        
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        viewController?.showAnswerResult(isCorrect: !currentQuestion.correctAnswer)
+    }
+
 }

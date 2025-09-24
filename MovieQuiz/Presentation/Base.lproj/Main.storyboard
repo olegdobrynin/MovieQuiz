@@ -82,7 +82,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="noAnswerTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="35R-my-Qqe"/>
+                                                    <action selector="noAnswerTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oRt-gc-hrB"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97s-8y-c1v" userLabel="Yes button">
@@ -104,7 +104,7 @@
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="yesAnswerTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XBP-ko-1Z8"/>
+                                                    <action selector="yesAnswerTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4LP-0L-Fbl"/>
                                                 </connections>
                                             </button>
                                         </subviews>
