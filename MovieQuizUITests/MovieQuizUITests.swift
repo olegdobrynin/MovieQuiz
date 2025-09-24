@@ -1,14 +1,6 @@
-//
-//  MovieQuizUITests.swift
-//  MovieQuizUITests
-//
-//  Created by olegg on 24.09.2025.
-//
-
 import XCTest
 
 class MovieQuizUITests: XCTestCase {
-    // swiftlint:disable:next implicitly_unwrapped_optional
     var app: XCUIApplication!
     
     override func setUpWithError() throws {
@@ -17,8 +9,6 @@ class MovieQuizUITests: XCTestCase {
         app = XCUIApplication()
         app.launch()
         
-        // это специальная настройка для тестов: если один тест не прошёл,
-        // то следующие тесты запускаться не будут; и правда, зачем ждать?
         continueAfterFailure = false
     }
     override func tearDownWithError() throws {
@@ -66,16 +56,14 @@ class MovieQuizUITests: XCTestCase {
         XCTAssertEqual(indexLabel.label, "2/10")
     }
     
-    func testGameFinish() {
-        print("ewe")
+    func testGameFinish() throws {
         sleep(2)
-        for _ in 1...10 {
-            app.buttons["No"].tap()
-            sleep(2)
+        for _ in (1...10) {
+            app.buttons["Yes"].tap()
+            sleep(3)
         }
-        
+            
         let alert = app.alerts["Этот раунд окончен!"]
-        
         XCTAssertTrue(alert.exists)
         XCTAssertTrue(alert.label == "Этот раунд окончен!")
         XCTAssertTrue(alert.buttons.firstMatch.label == "Сыграть ещё раз")
