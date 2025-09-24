@@ -1,4 +1,4 @@
 protocol QuestionFactoryProtocol {
     func requestNextQuestion()
-    func initGame()
+    func loadData()
 }
