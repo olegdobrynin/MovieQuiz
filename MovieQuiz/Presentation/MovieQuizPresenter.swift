@@ -31,20 +31,20 @@ final class MovieQuizPresenter {
     // MARK: - Actions
     
     func yesAnswerTapped() {
-     
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        viewController?.showAnswerResult(isCorrect: currentQuestion.correctAnswer)
+        didAnswer(isYes: true)
     }
 
     func noAnswerTapped() {
-        
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        
-        viewController?.showAnswerResult(isCorrect: !currentQuestion.correctAnswer)
+        didAnswer(isYes: false)
     }
 
+    private func didAnswer(isYes: Bool) {
+            guard let currentQuestion = currentQuestion else {
+                return
+            }
+            
+            let givenAnswer = isYes
+            
+            viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        }
 }
