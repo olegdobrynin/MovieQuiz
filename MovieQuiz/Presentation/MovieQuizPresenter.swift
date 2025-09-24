@@ -2,11 +2,14 @@ import Foundation
 import UIKit
 
 final class MovieQuizPresenter {
+    var currentQuestion: QuizQuestion?
     private var currentQuestionIndex = 0
     let questionsAmount: Int = 10
-    var currentQuestion: QuizQuestion?
+    var correctAnswers: Int = 0
     
+    private lazy var statisticService: StatisticServiceProtocol = StatisticService()
     weak var viewController: MovieQuizViewController?
+    private var questionFactory: QuestionFactoryProtocol?
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount
@@ -57,5 +60,30 @@ final class MovieQuizPresenter {
             self?.viewController?.show(quiz: viewModel)
         }
         
+    }
+    
+    private func showNextQuestionOrResults() {
+        
+        
+        if self.isLastQuestion() {
+            
+            statisticService.store(correct: correctAnswers, total: self.questionsAmount)
+            
+            let bestGame = statisticService.bestGame
+            let result: QuizResultViewData = QuizResultViewData(
+                title: "Этот раунд окончен!",
+                text: """
+                Ваш результат: \(correctAnswers)/\(self.questionsAmount)
+                Количество сыгранных квизов: \(statisticService.gamesCount)
+                Рекорд: \(statisticService.bestGame.correct)/\(self.questionsAmount) (\(bestGame.date.dateTimeString))
+                Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+                """,
+                buttonText: "Сыграть ещё раз")
+
+            viewController?.showResult(quiz: result)
+        }else{
+            questionFactory?.requestNextQuestion()
+            viewController?.showLoadingIndicator()
+        }
     }
 }

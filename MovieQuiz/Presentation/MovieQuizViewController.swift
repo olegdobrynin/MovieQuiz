@@ -87,7 +87,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         presenter.switchToNextQuestion()
         hideLoadingIndicator()
     }
-    private func show(quiz result: QuizResultViewData) {
+    func showResult(quiz result: QuizResultViewData) {
         let model = AlertModel(title: result.title,
                                text: result.text,
                                buttonText: result.buttonText
@@ -117,7 +117,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
     }
 
-    private func showLoadingIndicator() {
+    func showLoadingIndicator() {
         activityIndicator.startAnimating()
     }
     private func hideLoadingIndicator() {
@@ -144,7 +144,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 """,
                 buttonText: "Сыграть ещё раз")
 
-            show(quiz: result)
+            showResult(quiz: result)
         }else{
             questionFactory?.requestNextQuestion()
             showLoadingIndicator()
