@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C4336382E845319007D0ADD /* MovieQuizPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4336372E845319007D0ADD /* MovieQuizPresenter.swift */; };
 		1C84F31E2E3F728500EBBD76 /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C84F31C2E3F728500EBBD76 /* YS Display-Medium.ttf */; };
 		1C84F31F2E3F728500EBBD76 /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C84F31B2E3F728500EBBD76 /* YS Display-Bold.ttf */; };
 		1C9B29E92E4E3F2700B88ABB /* QuizQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B29E82E4E3F2700B88ABB /* QuizQuestion.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C4336372E845319007D0ADD /* MovieQuizPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieQuizPresenter.swift; sourceTree = "<group>"; };
 		1C84F31B2E3F728500EBBD76 /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		1C84F31C2E3F728500EBBD76 /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
 		1C9B29E82E4E3F2700B88ABB /* QuizQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizQuestion.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 		8F4738322848DE2A005DF65E /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				1C4336372E845319007D0ADD /* MovieQuizPresenter.swift */,
 				AD1ABAB52831907B00B3E448 /* MovieQuizViewController.swift */,
 				1CA5F64A2E61E8E7008DDD5E /* AlertPresenter.swift */,
 				AD1ABAB72831907B00B3E448 /* Main.storyboard */,
@@ -392,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C4336382E845319007D0ADD /* MovieQuizPresenter.swift in Sources */,
 				1CE7049E2E77445800F1C49C /* NetworkClient.swift in Sources */,
 				AD5EE5DE284D7887003966EF /* UIColor+Extensions.swift in Sources */,
 				1CA5F6502E61F238008DDD5E /* AlertPresenter.swift in Sources */,
